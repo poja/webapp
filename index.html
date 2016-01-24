@@ -8,31 +8,34 @@
 	<title>WebApp</title>
 
 	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="fonts/style.css" defer>
 </head>
 <body>
 	<header>
-		<div class="layout-wrap">
+		<div class="Section-content">
 			<a href="#"><img src="img/logo-netcraft.svg" alt="netcraft"></a>
 
-			<form class="search-box">
+			<form class="SearchBox">
 				<input type="search" name="q" placeholder="search">
 			</form>
 		</div>
 	</header>
 
-	<section class="page-body layout-wrap">
-		<div class="notifications"></div>
+	<main class="Section-content">
+		<div class="NotificationBar">
+			The data of UTF BI would be updated at 16:00pm.
+		</div>
 
-		<nav>
-			<div class="nav-section">
+		<nav class="Nav">
+			<div class="Nav-topic--report">
 				<p>Select Reporting Platform</p>
 
-				<div class="menu">
-					<div class="menu-caption">
+				<div class="Menu">
+					<div class="Menu-caption">
 						<p>Choose QS report</p>
 					</div>
 
-					<ul class="action-list">
+					<ul class="Menu-actionList">
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
@@ -42,15 +45,15 @@
 				</div>
 			</div>
 
-			<div class="nav-section">
+			<div class="Nav-topic--dashboard">
 				<p>Select Dashboard</p>
 
-				<div class="menu">
-					<div class="menu-caption">
+				<div class="Menu">
+					<div class="Menu-caption">
 						<p>Choose dashboard</p>
 					</div>
 
-					<ul class="action-list">
+					<ul class="Menu-actionList">
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
@@ -60,15 +63,15 @@
 				</div>
 			</div>
 
-			<div class="nav-section">
+			<div class="Nav-topic--help">
 				<p>Help &amp; Tutorials</p>
 
-				<div class="menu">
-					<div class="menu-caption">
+				<div class="Menu">
+					<div class="Menu-caption">
 						<p>Choose guide</p>
 					</div>
 
-					<ul class="action-list">
+					<ul class="Menu-actionList">
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
 						<li><a href="#">link</a></li>
@@ -79,27 +82,127 @@
 			</div>
 		</nav>
 
-		<section class="tabs">
-			<ul>
-				<li><a href="#quick-reports">Quick Reports</a></li>
-				<li><a href="#my-folders">My Folders</a></li>
-				<li><a href="#my-team-folders">My Team Folders</a></li>
-				<li><a href="#public-folders">Public Folders</a></li>
+		<section class="Section--tabs">
+			<ul class="TabNav">
+				<li class="selected">
+					<a href="#quick-reports">
+						<i class="icon-external-link"></i>
+						Quick Reports
+					</a>
+				</li>
+				<li>
+					<a href="#my-folders">
+						<i class="icon-star-o"></i>
+						My Folders
+					</a>
+				</li>
+				<li>
+					<a href="#my-team-folders">
+						<i class="icon-folder-open-o"></i>
+						My Team Folders
+					</a>
+				</li>
+				<li>
+					<a href="#public-folders">
+						<i class="icon-copy"></i>
+						Public Folders
+					</a>
+				</li>
 			</ul>
 
-			<div id="quick-reports">
+			<div class="Tab selected" id="quick-reports">
+				<div template="tab-content" class="Tab-content">
+					<div class="Tab-control">
+						<select>
+							<option value="Ynet">Ynet</option>
+						</select>
+						<a href="http://ynet.co.il/" target="_blank" class="IconButton--expand">
+							<img src="./img/icons/expand.png" alt="External Website">
+						</a>
+						<a href="#{{id}}-settings" class="IconButton--settings selected">
+							<img src="./img/icons/settings.png" alt="Tab Settings">
+						</a>
+					</div>
+					<div class="Tab-settings">
+						<div class="SiteRow">
+							<p>Report 01</p>
+							<div class="SanitizedInput">
+								<label for="{{id}}-sitename-1">Name</label>
+								<input type="text" id="{{id}}-sitename-1">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+							<div class="SanitizedInput hasError">
+								<label for="{{id}}-siteurl-1">URL</label>
+								<input type="text" id="{{id}}-siteurl-1">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+						</div>
+						<div class="SiteRow">
+							<p>Report 02</p>
+							<div class="SanitizedInput">
+								<label for="{{id}}-sitename-2">Name</label>
+								<input type="text" id="{{id}}-sitename-2">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+							<div class="SanitizedInput">
+								<label for="{{id}}-siteurl-2">URL</label>
+								<input type="text" id="{{id}}-siteurl-2">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+						</div>
+						<div class="SiteRow">
+							<p>Report 03</p>
+							<div class="SanitizedInput">
+								<label for="{{id}}-sitename-3">Name</label>
+								<input type="text" id="{{id}}-sitename-3">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+							<div class="SanitizedInput">
+								<label for="{{id}}-siteurl-3">URL</label>
+								<input type="text" id="{{id}}-siteurl-3">
+								<p class="ErrorBox">
+									<i class="ErrorBox-icon"></i>
+									Please fill out this field.
+								</p>	
+							</div>
+						</div>
+						<div class="ChangesRow">
+							<button class="CancelButton">Cancel</button>
+							<button class="SaveButton">Save</button>	
+						</div>
+					</div>
+					<iframe src="http://www.runescape.com/" frameborder="0"></iframe>
+				</div>
 			</div>
 
-			<div id="my-folders">
+			<div class="Tab" id="my-folders">
 			</div>
 
-			<div id="my-team-folders">
+			<div class="Tab" id="my-team-folders">
 			</div>
 
-			<div id="public-folders">
+			<div class="Tab" id="public-folders">
 			</div>
+
+			
+
 		</section>
-	</section>
+	</main>
 
 	<script src="js/main.js"></script>
 </body>

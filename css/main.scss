@@ -1,0 +1,534 @@
+
+/******************/
+/**** General *****/
+/******************/
+
+
+// Definitions
+
+$u-bg-body: "../img/body-background.jpg";
+
+$c-bg-lightgray: #DBDBDB;
+$c-bg-darkgray: #646464;
+$c-font-gray: #303030;
+
+$s-font-default: 1.5rem;
+
+$w-content-large: 1000px;
+$p-content: 2rem;
+
+$h-header: 6rem;
+
+@keyframes appear {
+	0% { opacity: 0; }
+	100% { opacity: 100%; }
+}
+
+
+// Utilities
+
+.u-clearfix::after {
+   content: " "; 	/* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+.u-invisolabel {
+	font-size: 0;
+	display: table-cell; /* so that it doesnt effect other elements */
+	margin: 0;
+	padding: 0;
+	visibility: hidden;
+}
+
+
+.u-graphicalLink {
+	font-size: 0;
+}
+
+a.u-cleanLinks,
+.u-cleanLinks a {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: none;		
+	}
+}
+
+
+// Default Behavior
+
+html {
+	height: 100%;
+	font-size: 62.5%;
+}
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+
+	font-family: icons, sans-serif;
+	color: $c-font-gray;
+}
+i {
+	font-style: normal;
+}
+select {
+	background-color: white;
+	border: 0;
+	padding: 0.25*$p-content;
+	width: 20rem;
+}
+
+
+// Components
+
+body {
+	background: url($u-bg-body) center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+.Section-content {
+	width: 90%;
+	// max-width: $w-content-large;
+	box-sizing: border-box;
+	padding: $p-content;
+	margin: 0 auto;
+}
+
+
+$directions: top, bottom, left, right;
+@function opposite($direction) {
+  @if ($direction == left) { @return right; }
+  @if ($direction == right) { @return left; }
+  @if ($direction == top) { @return bottom; }
+  @if ($direction == bottom) { @return top; }
+}
+
+@mixin Arrow($direction, $size, $color) {
+	display: inline-block;
+  	width: 0; height: 0px;
+	border: $size solid transparent;
+	border-#{opposite($direction)}: $size solid $color; 
+}
+
+
+
+
+
+
+
+/******************/
+/***** Header *****/
+/******************/
+
+$h-header-content: 3rem;
+
+header {
+
+	background-color: black;
+
+	.Section-content {
+		@extend .u-clearfix;
+
+		height: $h-header;
+		padding-top: ($h-header - $h-header-content) / 2;
+		padding-bottom: 0;
+	}
+
+	img, .SearchBox input {
+		height: $h-header-content;
+	}
+
+	img {
+		float: left;
+	}
+	.SearchBox {
+		float: right;
+	}
+}
+
+header .SearchBox input {
+	padding-left: .5rem;
+}
+
+
+
+
+
+
+
+
+/******************/
+/****** Main ******/
+/******************/
+
+main {
+	font-size: $s-font-default;
+	background-color: rgba(black, 0.4);
+	min-height: calc(100% - #{$h-header});
+}
+
+.NotificationBar {
+	padding: 0.5*$p-content $p-content;
+	background-color: $c-bg-lightgray;
+}
+
+
+
+
+
+
+
+
+/***********************/
+/****** Navigator ******/
+/***********************/
+
+$m-horizontal-nav: 3%;
+
+.Nav {
+	@extend .u-clearfix;
+
+	font-size: 0;
+	margin-top: $p-content;
+
+	%Nav-topic {
+		margin-right: $m-horizontal-nav;
+		margin-left: $m-horizontal-nav;
+		width: (100 - 4 * $m-horizontal-nav) / 3;
+		float: left;
+
+		&:first-child {	margin-left: 0;	}
+		&:last-child { margin-right: 0; }
+	}
+}
+
+
+%Nav-topic {
+	height: 18rem;
+	position: relative;
+
+	font-size: $s-font-default;
+	text-align: center;
+
+	background-color: black;
+	background-repeat: no-repeat;
+	background-position-x: 50%;
+	
+	& > p {
+		color: white;
+		font-size: 1.5 * $s-font-default;
+	}
+
+	.Menu {
+		position: absolute;
+		bottom: 0;
+		right: 0; left: 0;
+	}
+}
+.Nav-topic--report {
+	@extend %Nav-topic;
+	background-image: url('../img/icons/action-report-new.png');
+	background-position-y: 650%;
+}
+.Nav-topic--dashboard {
+	@extend %Nav-topic;
+	background-image: url('../img/icons/action-report-top.png');
+	background-position-y: 650%;
+}
+.Nav-topic--help {
+	@extend %Nav-topic;
+	background-image: url('../img/icons/actions-help.png');
+	background-position-y: 125%;
+}
+
+.Menu {
+	@extend .u-cleanLinks;
+
+	position: relative;
+	text-align: left;
+}
+.Menu-caption {
+	background-color: $c-bg-lightgray;
+	p { margin: 0; }
+	padding: 0.5*$p-content  0.5*$p-content;
+	
+	p::after {
+		content: " ";
+		@include Arrow(bottom, 7px, black);
+
+		float: right;
+		margin-top: 5px;
+		transition: transform 0.5s ease;
+	}
+}
+.Menu-actionList {
+	position: absolute;
+	z-index: 1;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	visibility: hidden;
+	box-shadow: 0px 0px 3px black;
+
+	li {
+		list-style: none;
+		display: block;
+		transition: height .5s ease;
+		height: 0;
+		padding: 0 0.5*$p-content;
+
+		background-color: white;
+		&, a { color: black; }
+
+		a {
+			display: inline-block;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			padding: 0.25*$p-content 0;
+			border-bottom: 1px solid #A0A0A0;
+		}
+		&:last-child a { border-bottom: 0; }
+	}
+}
+.Menu:hover {
+	.Menu-caption p::after {
+		transform: rotate(180deg) translateY(50%);
+	}
+	.Menu-actionList {
+		visibility: visible;
+
+		li {
+			height: $s-font-default + $p-content;
+		}
+	}
+}
+
+
+
+
+
+
+
+/*************************/
+/********** Tabs *********/
+/*************************/
+
+.TabNav {
+	@extend .u-clearfix, .u-cleanLinks;
+	padding: 0;
+	margin-top: $p-content;
+	margin-bottom: 0;
+
+	li {
+		list-style: none;
+
+		margin-right: $m-horizontal-nav;
+		margin-left: $m-horizontal-nav;
+		float: left;
+		width: (100% - $m-horizontal-nav * 6) / 4;
+		padding: 0.5*$p-content 0.5*$p-content;
+		box-sizing: border-box;
+		cursor: pointer;
+
+		text-align: center;
+		a { color: lighten($c-bg-lightgray, 0.3); }
+		background-color: $c-bg-darkgray;
+
+		&:first-child { margin-left: 0; }
+		&:last-child { margin-right: 0; }
+	}
+}
+.TabNav li.selected {
+	background-color: $c-bg-lightgray;
+	a { color: $c-font-gray; }
+}
+
+.Tab {
+	background-color: $c-bg-lightgray;
+	min-height: 4rem;
+	padding: $p-content;
+	visibility: hidden;
+	position: absolute;
+}
+.Tab-content {
+	position: relative;
+}
+.Tab.selected {
+	visibility: visible;
+	position: static;
+}
+
+
+.Tab-control {
+	text-align: right;
+	select { float: left; }
+}
+
+%IconButton {
+	display: inline-block;
+	padding: 0.5*$p-content;
+	img { height: 100%; }
+}
+.IconButton--expand {
+	@extend %IconButton;
+}
+.IconButton--settings {
+	@extend %IconButton;
+
+	&.selected { background-color: white; }
+}
+
+
+.Tab iframe {
+	width: 100%;
+	height: 100vh;
+	margin-top: 3rem;
+}
+
+
+
+
+
+
+
+
+
+
+/********************/
+/***** Settings *****/
+/********************/
+
+$h-site-row: 3rem;
+
+.Tab-settings {
+	padding: $p-content;
+	background-color: white;
+
+	.ChangesRow {
+		text-align: right;
+		margin-top: $p-content;
+	}
+}
+.Tab-settings.hovermode {
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0px 5px 8px gray;
+}
+
+.SiteRow {
+	margin-bottom: 0.5*$p-content;
+	padding: 0.25*$p-content $p-content;
+	height: $h-site-row;
+	
+	font-size: 0;
+	background-color: $c-bg-lightgray;
+
+	& > p, .SanitizedInput { box-sizing: border-box; }
+	& > p {
+		font-size: $s-font-default;
+		display: inline-block;
+		width: 10%;
+		margin: 0;
+	}
+	.SanitizedInput {
+		width: 42%;
+
+		& + .SanitizedInput { margin-left: 6%; }
+	}
+}
+.SanitizedInput {
+	display: inline-block;
+	position: relative;
+	height: 100%;
+	font-size: 0;
+
+	input, label, .ErrorBox {
+		font-size: $s-font-default;
+	}
+	input {
+		line-height: 100%;
+		height: 100%;
+		width: 88%;
+		box-sizing: border-box;
+		padding: 0 0.5*$s-font-default;
+	}
+	label {
+		width: 12%;
+		display: inline-block;
+		&::after { content: ":"; }
+	}
+
+	.ErrorBox { 
+		display: none; 
+		transition: .2s opacity ease;
+
+		position: absolute;
+		z-index: 1;
+		bottom: - $h-site-row - $p-content;
+		left: 50%;
+	}
+}
+.SanitizedInput.hasError {
+	input { border: 1px solid red; }
+	.ErrorBox { 
+		display: block; 
+		animation: 1s appear;
+	}
+}
+
+
+.ErrorBox {
+	padding: 0.25*$p-content;
+	height: $s-font-default;
+	background-color: white;
+	border: 1px solid gray;
+	border-radius: 3px;
+
+	.ErrorBox-icon::before {
+		content: "!";
+		font-weight: bold;
+		padding: 2px 7px;
+		margin-right: 0.25*$p-content;
+		color: white;
+		background-color: orange;
+	}
+
+	&::after {
+		@include Arrow(top, .5rem, gray);
+		content: " ";
+		position: absolute;
+		top: -.5rem - 0.25*$p-content;
+		left: 10%;
+	}
+}
+
+
+
+%ChangesButton {
+	padding: 0.25*$p-content;
+	min-width: 10rem;
+}
+.CancelButton {
+	@extend %ChangesButton;
+
+	background: none;
+	border: none;
+	color: black;
+	text-decoration: underline;
+}
+.SaveButton {
+	@extend %ChangesButton;
+
+	background-color: black;
+	color: white;
+	border: none;
+}
+
