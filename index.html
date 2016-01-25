@@ -27,7 +27,7 @@
 		</div>
 
 		<nav class="Nav">
-			<div class="Nav-topic--report">
+			<div class="Nav-topic Nav-topic--report">
 				<p>Select Reporting Platform</p>
 
 				<div class="Menu">
@@ -45,7 +45,7 @@
 				</div>
 			</div>
 
-			<div class="Nav-topic--dashboard">
+			<div class="Nav-topic Nav-topic--dashboard">
 				<p>Select Dashboard</p>
 
 				<div class="Menu">
@@ -63,7 +63,7 @@
 				</div>
 			</div>
 
-			<div class="Nav-topic--help">
+			<div class="Nav-topic Nav-topic--help">
 				<p>Help &amp; Tutorials</p>
 
 				<div class="Menu">
@@ -110,22 +110,22 @@
 				</li>
 			</ul>
 
-			<div class="Tab selected" id="quick-reports">
+			<div class="Tab selected settingsMode" id="quick-reports">
 				<div template="tab-content" class="Tab-content">
 					<div class="Tab-control">
 						<select>
 							<option value="Ynet">Ynet</option>
 						</select>
-						<a href="http://ynet.co.il/" target="_blank" class="IconButton--expand">
+						<a href="{{url}}" target="_blank" class="IconButton IconButton--external">
 							<img src="./img/icons/expand.png" alt="External Website">
 						</a>
-						<a href="#{{id}}-settings" class="IconButton--settings selected">
+						<a href="#{{id}}-settings" class="IconButton IconButton--settings">
 							<img src="./img/icons/settings.png" alt="Tab Settings">
 						</a>
 					</div>
 					<div class="Tab-settings">
 						<div class="SiteRow">
-							<p>Report 01</p>
+							<p>{{rowLabel}} 01</p>
 							<div class="SanitizedInput">
 								<label for="{{id}}-sitename-1">Name</label>
 								<input type="text" id="{{id}}-sitename-1">
@@ -144,7 +144,7 @@
 							</div>
 						</div>
 						<div class="SiteRow">
-							<p>Report 02</p>
+							<p>{{rowLabel}} 02</p>
 							<div class="SanitizedInput">
 								<label for="{{id}}-sitename-2">Name</label>
 								<input type="text" id="{{id}}-sitename-2">
@@ -163,7 +163,7 @@
 							</div>
 						</div>
 						<div class="SiteRow">
-							<p>Report 03</p>
+							<p>{{rowLabel}} 03</p>
 							<div class="SanitizedInput">
 								<label for="{{id}}-sitename-3">Name</label>
 								<input type="text" id="{{id}}-sitename-3">
@@ -186,17 +186,17 @@
 							<button class="SaveButton">Save</button>	
 						</div>
 					</div>
-					<iframe src="http://www.runescape.com/" frameborder="0"></iframe>
+					<iframe src="{{url}}" frameborder="0"></iframe>
 				</div>
 			</div>
 
-			<div class="Tab" id="my-folders">
+			<div class="Tab Tab--simple iframeMode" id="my-folders">
 			</div>
 
-			<div class="Tab" id="my-team-folders">
+			<div class="Tab settingsMode" id="my-team-folders">
 			</div>
 
-			<div class="Tab" id="public-folders">
+			<div class="Tab Tab--simple iframeMode" id="public-folders">
 			</div>
 
 			
@@ -204,6 +204,7 @@
 		</section>
 	</main>
 
+	<script src="js/plugins.js"></script>
 	<script src="js/main.js"></script>
 </body>
 </html>

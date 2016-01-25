@@ -97,6 +97,17 @@ var UTILS = (function () {
 		Array.prototype.forEach.call(list, callback);
 	}
 
+	
+	/**
+	 * Make an array-like object more powerful
+	 * 
+	 * Gives it the Array.prototype.
+	 */
+	function makePowerful(arrayLike) {
+		Object.setPrototypeOf(arrayLike, Array.prototype);
+		return arrayLike;
+	}
+
 	/** 
 	 * Checks if the array includes the element
 	 *
@@ -125,6 +136,7 @@ var UTILS = (function () {
 		isObject: isObject,
 		ajax: ajax,
 		forEach: forEach,
+		makePowerful: makePowerful,
 		includes: includes,
 		replaceAll: replaceAll
 	};
