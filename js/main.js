@@ -63,9 +63,10 @@ var webapp = (function (UTILS, document, templateManager) {
 	}
 
 	function selectTabHandler(clickedTabCont, event) {
+		// TODO change URL hash
 		event.preventDefault();
 		tabControllers.forEach(function (controller) {
-			if (controller.tabId == clickedTabCont.tabId)
+			if (controller.tabId === clickedTabCont.tabId)
 				controller.select();
 			else
 				controller.deselect();
@@ -82,9 +83,22 @@ var webapp = (function (UTILS, document, templateManager) {
 		var tabContent = templateManager.createElement('tab-content', serverOptions);
 		tab.appendChild(tabContent);
 
+		this.setEventListeners();
+		this.loadSites();
+	}
+	TabController.prototype.setEventListeners = function () {
 		this.link = document.querySelector('a[href="#' + this.tabId + '"]');
 		if (this.link)
 			this.link.addEventListener('click', selectTabHandler.bind(this.link, this));
+
+		this.tab.querySelector('.SaveButton')
+			.addEventListener('click', this.validateSettings.bind(this)); // TODO
+
+		UTILS.forEach(this.tab.querySelectorAll('input'), function (inputElement) {
+			inputElement.addEventListener('keyup', function () {
+				inputElement.parentElement.classList.remove('hasError');
+			});
+		});
 	}
 	TabController.prototype.select = function () {
 		this.tab.classList.add('selected');
@@ -94,8 +108,38 @@ var webapp = (function (UTILS, document, templateManager) {
 		this.tab.classList.remove('selected');
 		this.link.parentElement.classList.remove('selected');
 	}
-	TabController.prototype.refresh = function () {
+	TabController.prototype.saveSettings = function () {
+		if (!this.validateSettings()) return false;
+		this.saveSites();
+		this.loadSites();
+	}
+	TabController.prototype.validateSettings = function () {
+		var urlRegex = /^(http:\/\/)?(https:\/\/)?([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+(\/.*)?$/;
 
+		function setError(element, errorDesc) {
+			element.classList.add('hasError');
+			element.querySelector('p').textContent = errorDesc;
+		}
+
+		var rows = this.tab.querySelectorAll('.SiteRow');
+		UTILS.forEach(rows, function (row) {
+			var nameInputContainer = row.querySelectorAll('.SanitizedInput')[0],
+				name = nameInputContainer.querySelector('input').value,
+				urlInputContainer = row.querySelectorAll('.SanitizedInput')[1];
+				url = urlInputContainer.querySelector('input').value;
+			if (name === '' && url !== '')
+				setError(nameInputContainer, 'Please fill out this field.');
+			if (name !== '' && url === '')
+				setError(urlInputContainer, 'Please fill out this field.');
+			if (url != '' && !url.match(urlRegex))
+				setError(urlInputContainer, 'Invalid URL.');
+		});
+	}
+	TabController.prototype.saveSites = function () {
+		// TODO
+	};
+	TabController.prototype.loadSites = function () {
+		// TODO
 	};
 
 	init();

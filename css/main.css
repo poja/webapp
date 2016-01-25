@@ -199,7 +199,7 @@ main {
       border-bottom: 0; }
 
 .Menu:hover .Menu-caption p::after {
-  transform: rotate(90deg) translateY(50%); }
+  transform: rotate(180deg) translateY(50%); }
 .Menu:hover .Menu-actionList {
   visibility: visible; }
   .Menu:hover .Menu-actionList li {
@@ -340,7 +340,7 @@ main {
     transition: .2s opacity ease;
     position: absolute;
     z-index: 1;
-    bottom: -5rem;
+    bottom: -3rem;
     left: 50%; }
 
 .SanitizedInput.hasError input {
@@ -355,6 +355,8 @@ main {
   background-color: white;
   border: 1px solid gray;
   border-radius: 3px; }
+  .ErrorBox p {
+    display: inline; }
   .ErrorBox .ErrorBox-icon::before {
     content: "!";
     font-weight: bold;

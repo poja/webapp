@@ -303,7 +303,7 @@ $m-horizontal-nav: 3%;
 .Menu:hover {
 
 	.Menu-caption p::after {
-		transform: rotate(90deg) translateY(50%);
+		transform: rotate(180deg) translateY(50%);
 	}
 	.Menu-actionList {
 		visibility: visible;
@@ -503,7 +503,7 @@ $h-site-row: 3rem;
 
 		position: absolute;
 		z-index: 1;
-		bottom: - $h-site-row - $p-content;
+		bottom: - $h-site-row;
 		left: 50%;
 	}
 }
@@ -522,6 +522,8 @@ $h-site-row: 3rem;
 	background-color: white;
 	border: 1px solid gray;
 	border-radius: 3px;
+
+	p { display: inline; }
 
 	.ErrorBox-icon::before {
 		content: "!";
