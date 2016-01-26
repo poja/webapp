@@ -394,7 +394,7 @@ $m-horizontal-nav: 3%;
 
 .Tab iframe {
 	width: 100%;
-	height: 100vh;
+	height: 90vh;
 	margin-top: 3rem;
 }
 
@@ -425,7 +425,7 @@ $m-horizontal-nav: 3%;
 .Tab.settingsMode, .Tab.settingsHoverMode {
 	.IconButton--settings {	
 		background-color: white; 
-		img { transform: rotate(1800deg); }
+		img { transform: rotate(180deg); }
 	}
 }
 

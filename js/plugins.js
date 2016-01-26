@@ -192,3 +192,46 @@ var templateManager = (function(UTILS, document) {
 }(UTILS, document));
 
 
+var hashService = (function (window) {
+
+	var listenees = [];
+
+	return {
+
+		/**
+		 * Changes the hash value of the window.
+		 *
+		 * @param <String> value 	The new hash value
+		 * @param <boolean> doJump	If to jump to the element with that ID. Default false.
+		 */
+		changeHash: function (value, doJump) {
+			if (doJump) 
+				window.location.hash = value;
+			else {
+				window.history.pushState({}, '', '#' + value);
+				listenees.forEach(function (listenee) {
+					listenee(window.location.hash);
+				});	
+			}
+		},
+
+		/**
+		 * Returns the current hash of the window.
+		 */
+		getHash: function () {
+			return window.location.hash;
+		},
+
+		/*
+		 * Listens to a hash change in the window, and calls the given callback.
+		 */
+		listen: function (callback) {
+			listenees.push(callback);
+			window.addEventListener('hashchange', function () {
+				callback(window.location.hash);
+			});
+		}
+	}
+
+}(window));
+

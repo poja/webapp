@@ -1,4 +1,42 @@
-var webapp = (function (UTILS, document, templateManager) {
+
+/**
+ * Allows getting and setting settings of tabs.
+ * Updates the localStorage so that the information is kept throughout sessions.
+ */
+var settingsService = (function (localStorage) {
+
+	return {
+
+		load: function (tabId) {
+			var allSettings = JSON.parse(localStorage.getItem('tabSettings'));
+			if (allSettings)
+				return allSettings[tabId] || {};
+			else return {};
+		},
+
+		save: function (tabId, settings) {
+			var allSettings = JSON.parse(localStorage.getItem('tabSettings'));
+			if (!allSettings) allSettings = {};
+
+			if (tabId === undefined || settings === undefined)
+				throw Error('Parmeters must not be undefined.');
+			
+			allSettings[tabId] = settings;
+			localStorage.setItem('tabSettings', JSON.stringify(allSettings));
+		}
+
+	};
+
+}(window.localStorage));
+
+
+/**
+ * Core module of the webapp.
+ * 
+ * Reponsible for all of the tab functionality, 
+ * and for information pulled from server.
+ */
+var webapp = (function (UTILS, document, templateManager, hashService, settingsService) {
 
 	var tabControllers = [];
 
@@ -47,6 +85,9 @@ var webapp = (function (UTILS, document, templateManager) {
 			initTabs(serverData);
 			updateNotification(serverData);
 			initQuickActions(serverData);
+			
+			hashService.listen(checkTabChange);
+			checkTabChange(hashService.getHash());
 		}});	
 	}
 
@@ -62,11 +103,15 @@ var webapp = (function (UTILS, document, templateManager) {
 		}
 	}
 
-	function selectTabHandler(clickedTabCont, event) {
-		// TODO change URL hash
-		event.preventDefault();
+	function checkTabChange(newHash) {
+		newHash = newHash.replace(/^#\//, '');
+		var tabIds = tabControllers.map(function (contr) {
+			return contr.tabId; 
+		});
+		if (!tabIds.includes(newHash)) return;
+
 		tabControllers.forEach(function (controller) {
-			if (controller.tabId === clickedTabCont.tabId)
+			if (controller.tabId === newHash)
 				controller.select();
 			else
 				controller.deselect();
@@ -83,22 +128,57 @@ var webapp = (function (UTILS, document, templateManager) {
 		var tabContent = templateManager.createElement('tab-content', serverOptions);
 		tab.appendChild(tabContent);
 
-		this.setEventListeners();
+		this.initEventListeners();
+
+		this.sites = [];
 		this.loadSites();
 	}
-	TabController.prototype.setEventListeners = function () {
+	TabController.prototype.initEventListeners = function () {
+		var tab = this.tab;
+
+		// Click event on the tab's navigation link
 		this.link = document.querySelector('a[href="#' + this.tabId + '"]');
-		if (this.link)
-			this.link.addEventListener('click', selectTabHandler.bind(this.link, this));
+		if (this.link) {
+			var tabId = this.tabId;
+			this.link.addEventListener('click', function (e) {
+				e.preventDefault();
+				hashService.changeHash('/' + tabId);
+			});
+		}
 
-		this.tab.querySelector('.SaveButton')
-			.addEventListener('click', this.validateSettings.bind(this)); // TODO
+		// Change event on the site selection
+		tab.querySelector('select')
+			.addEventListener('change', this.loadCurrentSite.bind(this));
 
-		UTILS.forEach(this.tab.querySelectorAll('input'), function (inputElement) {
+		// Settings events: 
+
+		// Click even on settings save button
+		tab.querySelector('.SaveButton')
+			.addEventListener('click', this.trySave.bind(this));
+
+		// Key event on settings inputs, to release the given error
+		UTILS.forEach(tab.querySelectorAll('input'), function (inputElement) {
 			inputElement.addEventListener('keyup', function () {
 				inputElement.parentElement.classList.remove('hasError');
 			});
 		});
+
+		// Click event on settings button
+		tab.querySelector('.IconButton--settings')
+			.addEventListener('click', (function (e) {
+				e.preventDefault();
+				// TODO load old settings
+				if (this.getMode() === 'iframeMode')
+					this.changeMode('settingsHoverMode');
+			})
+			.bind(this));
+
+		// Cancel
+		tab.querySelector('.CancelButton')
+			.addEventListener('click', (function () {
+				this.changeMode('iframeMode');
+			})
+			.bind(this));
 	}
 	TabController.prototype.select = function () {
 		this.tab.classList.add('selected');
@@ -108,7 +188,7 @@ var webapp = (function (UTILS, document, templateManager) {
 		this.tab.classList.remove('selected');
 		this.link.parentElement.classList.remove('selected');
 	}
-	TabController.prototype.saveSettings = function () {
+	TabController.prototype.trySave = function () {
 		if (!this.validateSettings()) return false;
 		this.saveSites();
 		this.loadSites();
@@ -116,10 +196,14 @@ var webapp = (function (UTILS, document, templateManager) {
 	TabController.prototype.validateSettings = function () {
 		var urlRegex = /^(http:\/\/)?(https:\/\/)?([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+(\/.*)?$/;
 
+		error = false;
 		function setError(element, errorDesc) {
+			error = true;
 			element.classList.add('hasError');
 			element.querySelector('p').textContent = errorDesc;
 		}
+
+		var allRowsEmpty = true;
 
 		var rows = this.tab.querySelectorAll('.SiteRow');
 		UTILS.forEach(rows, function (row) {
@@ -132,16 +216,81 @@ var webapp = (function (UTILS, document, templateManager) {
 			if (name !== '' && url === '')
 				setError(urlInputContainer, 'Please fill out this field.');
 			if (url != '' && !url.match(urlRegex))
-				setError(urlInputContainer, 'Invalid URL.');
+				setError(urlInputContainer, 'Please enter a valid URL.');
+
+			if (name != '' || url != '')
+				allRowsEmpty = false;
 		});
+
+		if (allRowsEmpty)
+			setError(
+				this.tab.querySelector('.SanitizedInput'), 
+				'Please fill out one row.'
+			);
+
+		return !error;
 	}
 	TabController.prototype.saveSites = function () {
-		// TODO
+		var sites = [];
+		var rows = this.tab.querySelectorAll('.SiteRow');
+		UTILS.forEach(rows, function (row) {
+			var name = row.querySelectorAll('input')[0].value,
+				url = row.querySelectorAll('input')[1].value;
+			if (name != '' && url != '')
+				sites.push({
+					name: name,
+					url: url
+				});
+		});
+		settings = settingsService.load(this.tabId);
+		settings.sites = sites;
+		settingsService.save(this.tabId, settings);
 	};
 	TabController.prototype.loadSites = function () {
-		// TODO
+		this.sites = settingsService.load(this.tabId).sites;
+		if (!this.sites || !(this.sites.length > 0)) return;
+
+		var selectElement = this.tab.querySelector('select');
+		selectElement.innerHTML = '';
+
+		UTILS.forEach(this.sites, function (site) {
+			var option = document.createElement('option');
+			option.value = site.url;
+			option.textContent = site.name;
+			selectElement.appendChild(option);
+		});
+
+		this.loadCurrentSite();
+		this.changeMode('iframeMode');
+	};
+	TabController.prototype.loadCurrentSite = function () {
+		var currentSite = this.tab.querySelector('select').value;
+		var linkExternal = this.tab.querySelector('.IconButton--external'),
+			iframe = this.tab.querySelector('iframe');
+		
+		linkExternal.href = currentSite;
+		iframe.src = currentSite;
+	};
+	TabController.prototype.MODES = ['iframeMode', 'settingsMode', 'settingsHoverMode'];
+	TabController.prototype.getMode = function () {
+		var tab = this.tab;
+		var ans = null;
+		this.MODES.forEach(function (mode) {
+			if (tab.classList.contains(mode))
+				ans = mode;
+		});
+		return ans;
+	};
+	TabController.prototype.changeMode = function (newMode) {
+		if (!this.MODES.includes(newMode)) throw Error('No such mode');
+
+		var tab = this.tab;
+		this.MODES.forEach(function (mode) {
+			tab.classList.remove(mode);
+		});
+		tab.classList.add(newMode);
 	};
 
 	init();
 
-}(UTILS, document, templateManager));
+}(UTILS, document, templateManager, hashService, settingsService));

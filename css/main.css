@@ -264,7 +264,7 @@ main {
 
 .Tab iframe {
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   margin-top: 3rem; }
 
 .Tab--simple .Tab-control .IconButton--settings,
@@ -284,7 +284,7 @@ main {
 .Tab.settingsMode .IconButton--settings, .Tab.settingsHoverMode .IconButton--settings {
   background-color: white; }
   .Tab.settingsMode .IconButton--settings img, .Tab.settingsHoverMode .IconButton--settings img {
-    transform: rotate(1800deg); }
+    transform: rotate(180deg); }
 
 .Tab.iframeMode .Tab-settings {
   display: none; }
