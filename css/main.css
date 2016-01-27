@@ -341,7 +341,7 @@ main {
     transition: .2s opacity ease;
     position: absolute;
     z-index: 1;
-    bottom: -3rem;
+    top: 3rem;
     left: 50%; }
 
 .SanitizedInput.hasError input {
@@ -352,7 +352,7 @@ main {
 
 .ErrorBox {
   padding: 0.5rem;
-  height: 1.5rem;
+  min-height: 1.5rem;
   background-color: white;
   border: 1px solid gray;
   border-radius: 3px; }

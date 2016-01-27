@@ -503,7 +503,7 @@ $h-site-row: 3rem;
 
 		position: absolute;
 		z-index: 1;
-		bottom: - $h-site-row;
+		top: $h-site-row;
 		left: 50%;
 	}
 }
@@ -518,7 +518,7 @@ $h-site-row: 3rem;
 
 .ErrorBox {
 	padding: 0.25*$p-content;
-	height: $s-font-default;
+	min-height: $s-font-default;
 	background-color: white;
 	border: 1px solid gray;
 	border-radius: 3px;
