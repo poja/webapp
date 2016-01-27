@@ -80,8 +80,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 			});
 		}
 
-		UTILS.ajax('./data/config.json', { done: function (response) {
-			serverData = JSON.parse(response);
+		UTILS.ajax('./data/config.json', { done: function (serverData) {
 			initTabs(serverData);
 			updateNotification(serverData);
 			initQuickActions(serverData);

@@ -47,8 +47,8 @@ var UTILS = (function () {
 					// If server sent a content type header, handle formats
 					if (contentType) {
 						// Handle JSON format
-						if (contentType === 'text/json' ||
-							contentType === 'application/json') {
+						if (contentType.match('text/json') ||
+							contentType.match('application/json')) {
 
 							// JSON throws an exception on invalid JSON
 							try {
