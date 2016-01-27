@@ -361,15 +361,19 @@ $m-horizontal-nav: 3%;
 
 .Tab {
 	background-color: $c-bg-lightgray;
-	min-height: 4rem;
-	padding: $p-content;
+	
+	position: absolute; // hide but keep in DOM
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
 
-	// hide but keep in DOM
-	position: absolute;
-	left: -9999px;
 	&.selected {
 		// show
 		position: static;
+		visibility: visible;
+		height: auto;
+		min-height: 4rem;
+		padding: $p-content;
 	}
 }
 .Tab-content {

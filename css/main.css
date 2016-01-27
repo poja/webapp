@@ -241,12 +241,16 @@ main {
 
 .Tab {
   background-color: #DBDBDB;
-  min-height: 4rem;
-  padding: 2rem;
   position: absolute;
-  left: -9999px; }
+  height: 0;
+  overflow: hidden;
+  visibility: hidden; }
   .Tab.selected {
-    position: static; }
+    position: static;
+    visibility: visible;
+    height: auto;
+    min-height: 4rem;
+    padding: 2rem; }
 
 .Tab-content {
   position: relative; }
