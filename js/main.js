@@ -107,7 +107,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 		var tabIds = tabControllers.map(function (contr) {
 			return contr.tabId; 
 		});
-		if (!tabIds.includes(newHash)) return;
+		if (!UTILS.includes(tabIds, newHash)) return;
 
 		tabControllers.forEach(function (controller) {
 			if (controller.tabId === newHash)
@@ -199,6 +199,10 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 			element.querySelector('p').textContent = errorDesc;
 		}
 
+		// Clean Start
+		UTILS.forEach(this.tab.querySelectorAll('.SanitizedInput'), function (input) {
+			input.classList.remove('hasError');
+		});
 		var allRowsEmpty = true;
 
 		var rows = this.tab.querySelectorAll('.SiteRow');
@@ -217,7 +221,6 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 			if (name != '' || url != '')
 				allRowsEmpty = false;
 		});
-
 		if (allRowsEmpty)
 			setError(
 				this.tab.querySelector('.SanitizedInput'), 
@@ -300,7 +303,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 		return ans;
 	};
 	TabController.prototype.changeMode = function (newMode) {
-		if (!this.MODES.includes(newMode)) throw Error('No such mode');
+		if (!UTILS.includes(this.MODES, newMode)) throw Error('No such mode');
 
 		var tab = this.tab;
 		this.MODES.forEach(function (mode) {

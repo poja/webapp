@@ -14,7 +14,7 @@ $c-font-gray: #303030;
 
 $s-font-default: 1.5rem;
 
-$w-content-large: 1000px;
+$w-content-large: 1200px;
 $p-content: 2rem;
 
 $h-header: 6rem;
@@ -95,8 +95,8 @@ body {
 }
 
 .Section-content {
-	width: 90%;
-	// max-width: $w-content-large;
+	display: block;
+	max-width: $w-content-large;
 	box-sizing: border-box;
 	padding: $p-content;
 	margin: 0 auto;

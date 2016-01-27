@@ -114,10 +114,11 @@ var UTILS = (function () {
 	 * @return {boolean}
 	 */
 	function includes(array, element) {
+		var ans = false;
 		array.forEach(function (el) {
-			if (el == element) return true;
+			if (el == element) ans = true;
 		});
-		return false;
+		return ans;
 	}
 
 	/**
@@ -157,7 +158,7 @@ var templateManager = (function(UTILS, document) {
 		UTILS.forEach(templatedElements, function (el) {
 			var name = el.getAttribute('template');
 			templates[name] = el;
-			el.remove();
+			el.parentElement.removeChild(el);
 		});
 	}
 
