@@ -61,8 +61,8 @@ var UTILS = (function () {
 								}
 							}
 						// Handle XML format
-						} else if (contentType === 'text/xml' ||
-							contentType === 'application/xml') {
+						} else if (contentType.match('text/xml') ||
+							contentType.match('application/xml')) {
 							// responseXML returns a document object
 							res = xhr.responseXML;
 

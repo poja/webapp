@@ -67,7 +67,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsM
 				var topicElement = navTopics[index];
 
 				topicElement.querySelector('p').innerHTML = topicData.label;
-				topicElement.style.backgroundImage = 'url(../img/icons/' + topicData.icon + '.png)';
+				topicElement.style.backgroundImage = 'url(./img/icons/' + topicData.icon + '.png)';
 				topicElement.querySelector('.Menu-caption p').textContent = topicData.actionsLabel;
 				
 				var actionList = topicElement.querySelector('.Menu-actionList');
