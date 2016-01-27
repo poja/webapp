@@ -3,7 +3,7 @@
  * Allows getting and setting settings of tabs.
  * Updates the localStorage so that the information is kept throughout sessions.
  */
-var settingsService = (function (localStorage) {
+var settingsManager = (function (localStorage) {
 
 	return {
 
@@ -36,7 +36,7 @@ var settingsService = (function (localStorage) {
  * Reponsible for all of the tab functionality, 
  * and for information pulled from server.
  */
-var webapp = (function (UTILS, document, templateManager, hashService, settingsService) {
+var webapp = (function (UTILS, document, templateManager, hashService, settingsManager) {
 
 	var tabControllers = [];
 
@@ -80,7 +80,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 			});
 		}
 
-		UTILS.ajax('../data/config.json', { done: function (response) {
+		UTILS.ajax('./data/config.json', { done: function (response) {
 			serverData = JSON.parse(response);
 			initTabs(serverData);
 			updateNotification(serverData);
@@ -130,7 +130,6 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 
 		this.initEventListeners();
 
-		this.sites = [];
 		this.loadSites();
 	}
 	TabController.prototype.initEventListeners = function () {
@@ -156,20 +155,11 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 		tab.querySelector('.SaveButton')
 			.addEventListener('click', this.trySave.bind(this));
 
-		// Key event on settings inputs, to release the given error
-		UTILS.forEach(tab.querySelectorAll('input'), function (inputElement) {
-			inputElement.addEventListener('keyup', function () {
-				inputElement.parentElement.classList.remove('hasError');
-			});
-		});
-
 		// Click event on settings button
 		tab.querySelector('.IconButton--settings')
 			.addEventListener('click', (function (e) {
 				e.preventDefault();
-				// TODO load old settings
-				if (this.getMode() === 'iframeMode')
-					this.changeMode('settingsHoverMode');
+				this.loadSettings.call(this);
 			})
 			.bind(this));
 
@@ -179,6 +169,13 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 				this.changeMode('iframeMode');
 			})
 			.bind(this));
+
+		// Key event on settings inputs, to release the given error
+		UTILS.forEach(tab.querySelectorAll('input'), function (inputElement) {
+			inputElement.addEventListener('keyup', function () {
+				inputElement.parentElement.classList.remove('hasError');
+			});
+		});
 	}
 	TabController.prototype.select = function () {
 		this.tab.classList.add('selected');
@@ -194,7 +191,7 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 		this.loadSites();
 	}
 	TabController.prototype.validateSettings = function () {
-		var urlRegex = /^(http:\/\/)?(https:\/\/)?([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+(\/.*)?$/;
+		var urlRegex = /^(http:\/\/)?(https:\/\/)?([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]+(\/.*)?$/;
 
 		error = false;
 		function setError(element, errorDesc) {
@@ -236,24 +233,26 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 		UTILS.forEach(rows, function (row) {
 			var name = row.querySelectorAll('input')[0].value,
 				url = row.querySelectorAll('input')[1].value;
-			if (name != '' && url != '')
+			if (name != '' && url != '') {
+				if (!url.match(/^http(s)?:\/\//)) url = 'http://' + url;
 				sites.push({
 					name: name,
 					url: url
 				});
+			}
 		});
-		settings = settingsService.load(this.tabId);
+		settings = settingsManager.load(this.tabId);
 		settings.sites = sites;
-		settingsService.save(this.tabId, settings);
+		settingsManager.save(this.tabId, settings);
 	};
 	TabController.prototype.loadSites = function () {
-		this.sites = settingsService.load(this.tabId).sites;
-		if (!this.sites || !(this.sites.length > 0)) return;
+		var sites = settingsManager.load(this.tabId).sites;
+		if (!sites || !(sites.length > 0)) return;
 
 		var selectElement = this.tab.querySelector('select');
 		selectElement.innerHTML = '';
 
-		UTILS.forEach(this.sites, function (site) {
+		sites.forEach(function (site) {
 			var option = document.createElement('option');
 			option.value = site.url;
 			option.textContent = site.name;
@@ -270,6 +269,26 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 		
 		linkExternal.href = currentSite;
 		iframe.src = currentSite;
+	};
+	TabController.prototype.loadSettings = function () {
+		if (this.getMode() === 'iframeMode') {
+			var sites = settingsManager.load(this.tabId).sites;
+			UTILS.forEach(this.tab.querySelectorAll('.SiteRow'), function (row, index) {
+				
+				var nameInput = row.querySelectorAll('input')[0],
+					urlInput = row.querySelectorAll('input')[1];
+				if (sites[index]) {
+					nameInput.value = sites[index].name;
+					urlInput.value = sites[index].url;
+				}
+				else {
+					nameInput.value = '';
+					urlInput.value = '';
+				}
+
+			});
+			this.changeMode('settingsHoverMode');
+		}
 	};
 	TabController.prototype.MODES = ['iframeMode', 'settingsMode', 'settingsHoverMode'];
 	TabController.prototype.getMode = function () {
@@ -293,4 +312,4 @@ var webapp = (function (UTILS, document, templateManager, hashService, settingsS
 
 	init();
 
-}(UTILS, document, templateManager, hashService, settingsService));
+}(UTILS, document, templateManager, hashService, settingsManager));
