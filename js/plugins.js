@@ -73,6 +73,12 @@ var UTILS = (function () {
 							}
 						}
 					}
+					if (options.type === 'json') {
+						try {
+							res = JSON.parse(res);
+						}
+						catch (err) {}
+					}
 					// Trigger done callback with the proper response
 					if (options.done) {
 						options.done.call(xhr, res);
@@ -193,7 +199,7 @@ var templateManager = (function(UTILS, document) {
 }(UTILS, document));
 
 
-var hashService = (function (window) {
+var hashLocationService = (function (window) {
 
 	var listenees = [];
 

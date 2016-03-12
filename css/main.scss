@@ -277,29 +277,34 @@ $m-horizontal-nav: 3%;
 	visibility: hidden;
 	box-shadow: 0px 0px 3px black;
 
-	li {
-		list-style: none;
-		display: block;
-		transition: height .5s;
-		height: 0;
-		padding: 0 0.5*$p-content;
-
-		background-color: white;
-		&, a { color: black; }
-
-		a {
-			display: inline-block;
-			width: 100%;
-			height: 100%;
-			box-sizing: border-box;
-			padding: 0.25*$p-content 0;
-			border-bottom: 1px solid #A0A0A0;
-			opacity: 0;
-			transition: opacity 0.5s ease;
-		}
-		&:last-child a { border-bottom: 0; }
-	}
+	
 }
+
+.Menu .Menu-actionList li {
+	list-style: none;
+	display: block;
+	transition: height .5s;
+	height: 0;
+	padding: 0 0.5*$p-content;
+	
+	background-color: white;
+	&:hover { background-color: #E7E7E7; }
+	
+	&, a { color: black; }
+
+	a {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		padding: 0.25*$p-content 0;
+		border-bottom: 1px solid #A0A0A0;
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+	&:last-child a { border-bottom: 0; }
+}
+
 .Menu:hover {
 
 	.Menu-caption p::after {
@@ -421,7 +426,10 @@ $m-horizontal-nav: 3%;
 }
 
 .Tab.settingsMode { 
-	iframe, .IconButton--external, select { 
+	iframe, 
+	.IconButton--external, 
+	select,
+	.CancelButton { 
 		display: none; 
 	}
 }
