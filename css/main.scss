@@ -179,8 +179,17 @@ main {
 	padding: 0.5*$p-content $p-content;
 	background-color: $c-bg-lightgray;
 	margin-bottom: $p-content;
+	border: 1px solid transparent;
+	width: 100%;
+	box-sizing: border-box;
 
-	&.empty { display: none; }
+	transition: border-color .5s, width .5s, margin-bottom .5s, opacity .5s;
+
+	&.empty { 
+		margin-bottom: -2.5rem;
+		opacity: 0;
+	}
+	&.emphasize { border-color: darken(red, 20%); }
 }
 
 
@@ -214,7 +223,7 @@ $m-horizontal-nav: 3%;
 
 
 .Nav-topic {
-	height: 20rem;
+	height: 18rem;
 	position: relative;
 
 	font-size: $s-font-default;
@@ -222,7 +231,8 @@ $m-horizontal-nav: 3%;
 
 	background-color: black;
 	background-repeat: no-repeat;
-	background-position-x: 50%;
+    background-size: 6em;
+    background-position: center 6em;
 	
 	& > p {
 		color: white;
@@ -237,15 +247,12 @@ $m-horizontal-nav: 3%;
 }
 .Nav-topic--report {
 	background-image: url('../img/icons/action-report-new.png');
-	background-position-y: 350%;
 }
 .Nav-topic--dashboard {
 	background-image: url('../img/icons/action-report-top.png');
-	background-position-y: 350%;
 }
 .Nav-topic--help {
 	background-image: url('../img/icons/actions-help.png');
-	background-position-y: 125%;
 }
 
 .Menu {

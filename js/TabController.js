@@ -165,6 +165,33 @@ webapp.TabController = (function (webapp, UTILS, document, templateManager, hash
 		linkExternal.href = currentSite;
 		iframe.src = currentSite;
 	};
+	TabController.prototype.setCurrentReport = function (reportNamePart) {
+		var report = this.searchForReport(reportNamePart);
+		var siteSelect = this.tab.querySelector('select');
+
+		if (!report) return false;
+		siteSelect.value = report.url;
+		this.loadCurrentSite();
+	};
+	/**
+	 * Find a report, in the format { name: , url: },
+	 * That is in this tab and its name contains the queryString
+	 * Return null if none such exist
+	 */
+	TabController.prototype.searchForReport = function(queryString) {
+		var settings = webapp.settingsManager.loadTab(this.tabId);
+		if (!settings) return null;
+		var sites = settings.sites;
+		if (!sites) return null;
+
+		var answer = null;
+		sites.every(function (site) {
+			if (site.name.search(queryString) >= 0)
+				answer = site;
+			else return true;
+		});
+		return answer;
+	};
 	TabController.prototype.loadSettings = function () {
 		if (this.getMode() === 'iframeMode') {
 			var sites = webapp.settingsManager.loadTab(this.tabId).sites;

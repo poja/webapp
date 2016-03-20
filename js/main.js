@@ -6,11 +6,20 @@ var webapp = webapp || {};
  * Reponsible for all of the tab functionality, 
  * and for information pulled from server.
  */
-(function main(webapp, UTILS, document, hashLocationService) {
+(function main(webapp, UTILS, document, hashLocationService, setTimeout) {
 
 	var tabControllers = [];
 
 	function init() {
+
+		function initSearch() {
+			var searchForm = document.querySelector('#form-search');
+			searchForm.addEventListener('submit', function (event) {
+				event.preventDefault();
+				doSearch();
+				return false;
+			});
+		}
 
 		function initTabs(serverData) {
 			var tabs = document.querySelectorAll('.Tab');
@@ -61,8 +70,9 @@ var webapp = webapp || {};
 			type: 'json',
 			done: function (serverData) {
 				initTabs(serverData);
-				updateNotification(serverData);
+				updateNotificationToText(serverData.notification);
 				initQuickActions(serverData);
+				initSearch();
 				
 				hashLocationService.listen(tabChangeHandler);
 				initCurrentTab();
@@ -70,16 +80,54 @@ var webapp = webapp || {};
 		});	
 	}
 
-	function updateNotification(serverData) {
+
+	function updateNotificationToText(text) {
 		var notificationBar = document.querySelector('.NotificationBar');
-		if (!serverData.notification) {
+		if (!text) {
 			notificationBar.textContent = '';
 			notificationBar.classList.add('empty');
 		}
 		else {
-			notificationBar.textContent = serverData.notification;
+			notificationBar.textContent = text;
 			notificationBar.classList.remove('empty');
+			notificationBar.classList.add('emphasize');
+			setTimeout(function () {
+				notificationBar.classList.remove('emphasize');
+			}, 500);
 		}
+	}
+
+	function updateNotificationByServer() {
+		UTILS.ajax('./data/config.json', { 
+			type: 'json',
+			done: function (serverData) {
+				updateNotificationToText(serverData.notification);
+			}
+		});	
+	}
+
+	/**
+	 * Extracts the information from the from #form-search.
+	 * Try to find a report, that matches (its name includes) the search query
+	 * If found, select this report. 
+	 * Otherwise, change the notification to be a "not found" error.
+	 */
+	function doSearch() {
+		var query = document.querySelector('#form-search input').value;
+		var success = false;
+		tabControllers.every(function (tabCtrl) {
+			var report = tabCtrl.searchForReport(query);
+			if (report) {
+				tabCtrl.setCurrentReport(report.name);
+				hashLocationService.changeHash('/' + tabCtrl.tabId);
+				success = true;
+			}
+			else return true;
+		});
+		if (success)
+			updateNotificationToText('');
+		else
+			updateNotificationToText('Sorry, the searched report ' + query + ' was not found.');
 	}
 
 	/**
@@ -107,4 +155,4 @@ var webapp = webapp || {};
 
 	init();
 
-}(webapp, UTILS, document, hashLocationService));
+}(webapp, UTILS, document, hashLocationService, window.setTimeout));
