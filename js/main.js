@@ -45,7 +45,7 @@ var webapp = webapp || {};
 			serverData.quickActions.forEach(function (topicData, index) {
 				var topicElement = navTopics[index];
 
-				topicElement.querySelector('p').innerHTML = topicData.label;
+				topicElement.querySelector('h2').innerHTML = topicData.label;
 				topicElement.style.backgroundImage = 'url(./img/icons/' + topicData.icon + '.png)';
 				topicElement.querySelector('.Menu-caption p').textContent = topicData.actionsLabel;
 				

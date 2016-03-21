@@ -68,6 +68,12 @@ webapp.TabController = (function (webapp, UTILS, document, templateManager, hash
 					that.changeMode('iframeMode');
 			});
 		});
+		// Form submission of tab settings
+		tab.querySelector('form').addEventListener('submit', function (e) {
+			e.preventDefault();
+			that.trySave();
+			return false;
+		});
 	}
 	TabController.prototype.select = function () {
 		this.tab.classList.add('selected');

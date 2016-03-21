@@ -13,10 +13,13 @@
 <body>
 	<header>
 		<div class="Section-content">
-			<a href="#"><img src="img/logo-netcraft.svg" alt="netcraft"></a>
+			<h1>
+				<a href="#"><img src="img/logo-netcraft.svg" alt="netcraft"></a>
+			</h1>
 
 			<form class="SearchBox" id="form-search">
-				<input type="search" name="q" placeholder="search">
+				<label for="search-reports" class="u-invisolabel">Search Reports:</label>
+				<input type="search" name="q" id="search-reports" placeholder="search">
 			</form>
 		</div>
 	</header>
@@ -28,7 +31,7 @@
 
 		<nav class="Nav">
 			<div class="Nav-topic Nav-topic--report">
-				<p>Select Reporting Platform</p>
+				<h2>Select Reporting Platform</h2>
 
 				<div class="Menu">
 					<div class="Menu-caption">
@@ -46,7 +49,7 @@
 			</div>
 
 			<div class="Nav-topic Nav-topic--dashboard">
-				<p>Select Dashboard</p>
+				<h2>Select Dashboard</h2>
 
 				<div class="Menu">
 					<div class="Menu-caption">
@@ -64,7 +67,7 @@
 			</div>
 
 			<div class="Nav-topic Nav-topic--help">
-				<p>Help &amp; Tutorials</p>
+				<h2>Help &amp; Tutorials</h2>
 
 				<div class="Menu">
 					<div class="Menu-caption">
@@ -113,7 +116,8 @@
 			<div class="Tab selected settingsMode" id="quick-reports">
 				<div template="tab-content" class="Tab-content">
 					<div class="Tab-control">
-						<select>
+						<label for="report-select-{{id}}" class="u-invisolabel">Select report:</label>
+						<select id="report-select-{{id}}">
 							<option value="Ynet">Ynet</option>
 						</select>
 						<a href="{{url}}" target="_blank" class="IconButton IconButton--external">
@@ -123,7 +127,7 @@
 							<img src="./img/icons/settings.png" alt="Tab Settings">
 						</a>
 					</div>
-					<div class="Tab-settings">
+					<form class="Tab-settings">
 						<div class="SiteRow">
 							<p>{{rowLabel}} 01</p>
 							<div class="SanitizedInput">
@@ -185,11 +189,10 @@
 							<button class="CancelButton">Cancel</button>
 							<button class="SaveButton">Save</button>	
 						</div>
-					</div>
+					</form>
 					<iframe 
 						src="" 
-						frameborder="0"
-						sandbox="allow-scripts allow-forms">
+						frameborder="0">
 					</iframe>
 				</div>
 			</div>

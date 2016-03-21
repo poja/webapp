@@ -47,6 +47,9 @@ body {
   font-family: Arial, sans-serif;
   color: #303030; }
 
+h1 {
+  margin: 0; }
+
 i {
   font-style: normal; }
 
@@ -137,9 +140,10 @@ main {
   background-repeat: no-repeat;
   background-size: 6em;
   background-position: center 6em; }
-  .Nav-topic > p {
+  .Nav-topic > h2 {
     color: white;
-    font-size: 2.25rem; }
+    font-size: 2.25rem;
+    font-weight: normal; }
   .Nav-topic .Menu {
     position: absolute;
     bottom: 0;

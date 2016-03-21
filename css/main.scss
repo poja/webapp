@@ -72,6 +72,9 @@ body {
 	font-family: Arial, sans-serif;
 	color: $c-font-gray;
 }
+h1 {
+	margin: 0;
+}
 i {
 	font-style: normal;
 }
@@ -234,9 +237,10 @@ $m-horizontal-nav: 3%;
     background-size: 6em;
     background-position: center 6em;
 	
-	& > p {
+	& > h2 {
 		color: white;
 		font-size: 1.5 * $s-font-default;
+		font-weight: normal;
 	}
 
 	.Menu {
