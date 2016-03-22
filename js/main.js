@@ -47,7 +47,11 @@ var webapp = webapp || {};
 
 				topicElement.querySelector('h2').innerHTML = topicData.label;
 				topicElement.style.backgroundImage = 'url(./img/icons/' + topicData.icon + '.png)';
-				topicElement.querySelector('.Menu-caption p').textContent = topicData.actionsLabel;
+
+				var menuCaption = topicElement.querySelector('.Menu-caption a');
+				menuCaption.textContent = topicData.actionsLabel;
+				menuCaption.href = topicData.actions[0].url;
+				menuCaption.target = '_blank';
 				
 				var actionList = topicElement.querySelector('.Menu-actionList');
 				actionList.innerHTML = '';

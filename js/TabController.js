@@ -35,17 +35,15 @@ webapp.TabController = (function (webapp, UTILS, document, templateManager, hash
 		tab.querySelector('select')
 			.addEventListener('change', this.loadCurrentSite.bind(this));
 
-		// Settings events: 
-
-		// Click even on settings save button
-		tab.querySelector('.SaveButton')
-			.addEventListener('click', this.trySave.bind(this));
 
 		// Click event on settings button
 		tab.querySelector('.IconButton--settings')
 			.addEventListener('click', (function (e) {
 				e.preventDefault();
-				this.loadSettings.call(this);
+				if (this.getMode() === 'settingsHoverMode')
+					this.changeMode('iframeMode');
+				else 
+					this.loadSettings.call(this);
 			})
 			.bind(this));
 
@@ -58,13 +56,17 @@ webapp.TabController = (function (webapp, UTILS, document, templateManager, hash
 
 		// Key event on settings inputs, to release the given error
 		UTILS.forEach(tab.querySelectorAll('input'), function (inputElement) {
-			inputElement.addEventListener('keyup', function (e) {
-				var ENTER_KEY = 13, 
-					ESCAPE_KEY = 27;
+			inputElement.addEventListener('keypress', function (e) {
+				var ENTER_KEY = 13;
 				inputElement.parentElement.classList.remove('hasError');
-				if (e.keyCode === ENTER_KEY)
+				if (e.keyCode === ENTER_KEY) {
+					e.preventDefault();
 					that.trySave();
-				else if (e.keyCode === ESCAPE_KEY && that.getMode() === 'settingsHoverMode') 
+				}
+			});
+			inputElement.addEventListener('keyup', function (e) {
+				var ESCAPE_KEY = 27;
+				if (e.keyCode === ESCAPE_KEY && that.getMode() === 'settingsHoverMode') 
 					that.changeMode('iframeMode');
 			});
 		});
@@ -216,6 +218,7 @@ webapp.TabController = (function (webapp, UTILS, document, templateManager, hash
 
 			});
 			this.changeMode('settingsHoverMode');
+			this.validateSettings();
 		}
 	};
 	TabController.prototype.MODES = ['iframeMode', 'settingsMode', 'settingsHoverMode'];

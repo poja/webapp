@@ -267,10 +267,17 @@ $m-horizontal-nav: 3%;
 }
 .Menu-caption {
 	background-color: $c-bg-lightgray;
-	p { margin: 0; }
 	padding: 0.5*$p-content  0.5*$p-content;
+
+	a { 
+		display: block;
+		margin: 0; 
+		&, &:focus, &:visited { 
+			color: $c-font-gray; 
+		}
+	}
 	
-	p::after {
+	a::after {
 		content: " ";
 		@include Arrow(bottom, 7px, black);
 
